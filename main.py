@@ -22,6 +22,7 @@ HEX_D = 0xA1
 HEX_E = 0x86
 HEX_F = 0x8E
 LED_ALL_RED = 0x3FFFF
+LED_ALL_GREEN = 0x1FF
 
 PB = 24930
 SW = 24929
@@ -155,6 +156,11 @@ def main():
 
         for car in cars:
             if frog.rect.colliderect(car.rect):
+                is_new_record = score > high_scores[0]
+        
+                if is_new_record:
+                    io.put_DP(LED_ALL_GREEN)  # Acende os 9 LEDs verdes
+
                 high_scores.append(score)
                 high_scores = sorted(high_scores, reverse=True)[:3]
                 io.put_LD(LED_ALL_RED)
