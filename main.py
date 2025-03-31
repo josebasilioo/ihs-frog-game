@@ -78,6 +78,10 @@ class IO:
         ret_pb = os.read(self.fd, 4)
         return 1 if (pb_pos & int.from_bytes(ret_pb, 'little')) > 0 else 0
 
+    def put_LD_G(self, val):
+        ioctl(self.fd, LED_G)
+        os.write(self.fd, val.to_bytes(4, 'little'))
+
     def put_LD(self, val):
         ioctl(self.fd, LED_R)
         os.write(self.fd, val.to_bytes(4, 'little'))
@@ -159,7 +163,7 @@ def main():
                 is_new_record = score > high_scores[0]
         
                 if is_new_record:
-                    io.put_DP(LED_ALL_GREEN)  # Acende os 9 LEDs verdes
+                    io.put_LD_G(LED_ALL_GREEN)  # Acende os 9 LEDs verdes
 
                 high_scores.append(score)
                 high_scores = sorted(high_scores, reverse=True)[:3]
