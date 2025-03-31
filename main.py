@@ -94,7 +94,7 @@ class IO:
          os.write(self.fd, data.to_bytes(8, 'little'))
  
     def reset_displays(self):
-         for _ in range(4):
+         for _ in range(8):
              self.put_DP(0, "0000")
              self.put_DP(1, "0000")
 
