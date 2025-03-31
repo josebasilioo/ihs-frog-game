@@ -61,7 +61,6 @@ SAFE_ZONE_HEIGHT = 50
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Frogger Game")
 
-
 class IO:
     def __init__(self) -> None:
         self.fd = os.open('/dev/mydev', os.O_RDWR)
@@ -88,6 +87,10 @@ class IO:
             data = (data << 8) | globals()[f'HEX_{num}']
         os.write(self.fd, data.to_bytes(4, 'little'))
 
+    def reset_displays(self):
+        for _ in range(4):
+            self.put_DP(0, "00")
+            self.put_DP(1, "00")
 
 class Frog:
     def __init__(self):
@@ -100,7 +103,6 @@ class Frog:
 
     def draw(self):
         pygame.draw.rect(screen, GREEN, self.rect)
-
 
 class Car:
     def __init__(self, y):
@@ -117,7 +119,6 @@ class Car:
     def draw(self):
         pygame.draw.rect(screen, RED, self.rect)
 
-
 def main():
     clock = pygame.time.Clock()
     frog = Frog()
@@ -128,10 +129,7 @@ def main():
     button_font = pygame.font.Font(None, 28)
     io = IO()
 
-    # Zerando todos os 8 displays
-    for i in range(8):
-        io.put_DP(0, "00")
-        io.put_DP(1, "00")
+    io.reset_displays()
 
     running = True
     while running:
@@ -178,10 +176,6 @@ def main():
             high_score_text = font.render(f"Top {i+1}: {high_score}", True, BLACK)
             screen.blit(high_score_text, (GAME_WIDTH + 50, 100 + i * 30))
 
-        pygame.draw.rect(screen, WHITE, (GAME_WIDTH + 50, SCREEN_HEIGHT - 80, 100, 30))
-        exit_text = button_font.render("Sair", True, BLACK)
-        screen.blit(exit_text, (GAME_WIDTH + 80, SCREEN_HEIGHT - 75))
-
         frog.draw()
         for car in cars:
             car.draw()
@@ -193,7 +187,6 @@ def main():
         clock.tick(FPS)
 
     pygame.quit()
-
 
 if __name__ == "__main__":
     main()
