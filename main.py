@@ -95,7 +95,10 @@ class IO:
 
 class Frog:
     def __init__(self):
-        self.rect = pygame.Rect(GAME_WIDTH // 2, SCREEN_HEIGHT - FROG_HEIGHT - 10, FROG_WIDTH, FROG_HEIGHT)
+        # Posição inicial centralizada na zona segura inferior
+        start_x = GAME_WIDTH // 2 - FROG_WIDTH // 2
+        start_y = SCREEN_HEIGHT - SAFE_ZONE_HEIGHT + (SAFE_ZONE_HEIGHT - FROG_HEIGHT) // 2
+        self.rect = pygame.Rect(start_x, start_y, FROG_WIDTH, FROG_HEIGHT)
         self.has_scored = False
 
     def move(self, dx, dy):
@@ -114,7 +117,7 @@ class Car:
         self.rect.x -= self.speed
         if self.rect.x < -CAR_WIDTH:
             self.rect.x = GAME_WIDTH
-            self.rect.y = random.randint(100, SCREEN_HEIGHT - 100)
+            self.rect.y = random.randint(SAFE_ZONE_HEIGHT, SCREEN_HEIGHT - SAFE_ZONE_HEIGHT - CAR_HEIGHT)
             self.speed = random.randint(3, 10)
 
     def draw(self):
@@ -123,7 +126,7 @@ class Car:
 def main():
     clock = pygame.time.Clock()
     frog = Frog()
-    cars = [Car(random.randint(100, SCREEN_HEIGHT - 100)) for _ in range(5)]
+    cars = [Car(random.randint(SAFE_ZONE_HEIGHT, SCREEN_HEIGHT - SAFE_ZONE_HEIGHT - CAR_HEIGHT)) for _ in range(5)]
     score = 0
     high_scores = [0, 0, 0]
     font = pygame.font.Font(None, 36)
@@ -158,16 +161,14 @@ def main():
                 time.sleep(2)
                 io.put_LD(0)
                 score = 0
-                frog.rect.y = SCREEN_HEIGHT - FROG_HEIGHT - 10
-                frog.rect.x = GAME_WIDTH // 2
-                frog.has_scored = False
+                frog = Frog()  # Reseta a posição do sapo corretamente
 
         # Verifica se o sapo chegou na zona segura superior
         if frog.rect.y < SAFE_ZONE_HEIGHT and not frog.has_scored:
             score += 1
             frog.has_scored = True
         # Reseta o has_scored quando o sapo volta para a base
-        if frog.rect.y >= SCREEN_HEIGHT - FROG_HEIGHT:
+        if frog.rect.y >= SCREEN_HEIGHT - SAFE_ZONE_HEIGHT:
             frog.has_scored = False
 
         screen.fill(GRAY)
