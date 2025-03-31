@@ -90,8 +90,8 @@ class IO:
          ioctl(self.fd, DIS_L if pos else DIS_R)
          data = 0
          for num in ar_num:
-             data = (data << 16) | globals()[f'HEX_{num}']
-         os.write(self.fd, data.to_bytes(4, 'little'))
+             data = (data << 8) | globals()[f'HEX_{num}']
+         os.write(self.fd, data.to_bytes(8, 'little'))
  
     def reset_displays(self):
          for _ in range(4):
