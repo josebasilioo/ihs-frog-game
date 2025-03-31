@@ -93,13 +93,19 @@ class IO:
              self.put_DP(0, "00")
              self.put_DP(1, "00")
     
-    def led_wave_effect(io, duration=2):
+    def led_wave_effect(self, duration_seconds=2.0):
+        """Efeito de onda nos LEDs com duração controlada"""
         start_time = time.time()
-        while time.time() - start_time < duration:
+        end_time = start_time + duration_seconds
+        
+        while time.time() < end_time:
             for i in range(18):
-                io.put_LD(1 << i)  # Acende um LED de cada vez
+                if time.time() >= end_time:  # Verifica se o tempo acabou
+                    break
+                self.put_LD(1 << i)  # Acende um LED de cada vez
                 time.sleep(0.05)
-        io.put_LD(0)
+        
+        self.put_LD(0)
 
 class Frog:
     def __init__(self):
