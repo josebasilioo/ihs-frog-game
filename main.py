@@ -90,13 +90,13 @@ class IO:
          ioctl(self.fd, DIS_L if pos else DIS_R)
          data = 0
          for num in ar_num:
-             data = (data << 8) | globals()[f'HEX_{num}']
+             data = (data << 4) | globals()[f'HEX_{num}']
          os.write(self.fd, data.to_bytes(4, 'little'))
  
     def reset_displays(self):
-         for _ in range(8):
-             self.put_DP(0, "7979")
-             self.put_DP(1, "7979")
+         for _ in range(4):
+             self.put_DP(0, "0000")
+             self.put_DP(1, "0000")
 
 class Frog:
     def __init__(self):
