@@ -81,16 +81,22 @@ class IO:
         os.write(self.fd, val.to_bytes(4, 'little'))
 
     def put_DP(self, pos, ar_num):
-        ioctl(self.fd, DIS_L if pos else DIS_R)
+        # Posição 0-3: displays da direita (0 é o mais à direita)
+        # Posição 4-7: displays da esquerda (4 é o mais à esquerda)
+        if pos < 4:
+            ioctl(self.fd, DIS_R + pos)  # DIS_R, DIS_R+1, DIS_R+2, DIS_R+3
+        else:
+            ioctl(self.fd, DIS_L + (pos-4))  # DIS_L, DIS_L+1, DIS_L+2, DIS_L+3
+        
         data = 0
         for num in ar_num:
             data = (data << 8) | globals()[f'HEX_{num}']
         os.write(self.fd, data.to_bytes(4, 'little'))
 
     def reset_displays(self):
-        for _ in range(4):
-            self.put_DP(0, "00")
-            self.put_DP(1, "00")
+        # Reseta todos os 8 displays individualmente
+        for i in range(8):
+            self.put_DP(i, "0")  # Cada display recebe "0"
 
 class Frog:
     def __init__(self):
