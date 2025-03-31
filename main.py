@@ -21,6 +21,7 @@ HEX_C = 0xC6
 HEX_D = 0xA1
 HEX_E = 0x86
 HEX_F = 0x8E
+LED_ALL_RED = 0x3FFFF
 
 PB = 24930
 SW = 24929
@@ -88,9 +89,17 @@ class IO:
          os.write(self.fd, data.to_bytes(4, 'little'))
  
     def reset_displays(self):
-         for _ in range(4):
+         for _ in range(8):
              self.put_DP(0, "00")
              self.put_DP(1, "00")
+    
+    def led_wave_effect(io, duration=2):
+        start_time = time.time()
+        while time.time() - start_time < duration:
+            for i in range(18):
+                io.put_LD(1 << i)  # Acende um LED de cada vez
+                time.sleep(0.05)
+        io.put_LD(0)
 
 class Frog:
     def __init__(self):
@@ -153,7 +162,7 @@ def main():
             if frog.rect.colliderect(car.rect):
                 high_scores.append(score)
                 high_scores = sorted(high_scores, reverse=True)[:3]
-                io.put_LD(1)
+                io.led_wave_effect(io)
                 time.sleep(2)
                 io.put_LD(0)
                 score = 0
