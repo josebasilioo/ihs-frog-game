@@ -87,16 +87,16 @@ class IO:
         os.write(self.fd, val.to_bytes(4, 'little'))
 
     def put_DP(self, pos, ar_num):
-         ioctl(self.fd, DIS_L if pos else DIS_R)
-         data = 0
-         for num in ar_num:
-             data = (data << 8) | globals()[f'HEX_{num}']
-         os.write(self.fd, data.to_bytes(8, 'little'))
- 
+        ioctl(self.fd, DIS_L if pos else DIS_R)
+        data = 0
+        for num in ar_num:
+            data = (data << 8) | globals()[f'HEX_{num}']
+        os.write(self.fd, data.to_bytes(4, 'little'))
+
     def reset_displays(self):
-         for _ in range(8):
-             self.put_DP(0, "0000")
-             self.put_DP(1, "0000")
+        # Envia zeros para todos os dígitos de ambos os displays
+        self.put_DP(0, [0, 0, 0, 0])  # Display esquerdo (4 dígitos)
+        self.put_DP(1, [0, 0, 0, 0])  # Display direito (4 dígitos)
 
 class Frog:
     def __init__(self):
