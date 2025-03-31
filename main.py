@@ -125,10 +125,11 @@ def main():
     score = 0
     high_scores = [0, 0, 0]
     font = pygame.font.Font(None, 36)
+    button_font = pygame.font.Font(None, 28)
     io = IO()
 
-    io.put_DP(0, "00")
-    io.put_DP(1, "00")
+    io.put_DP(0, "0000")
+    io.put_DP(1, "0000")
 
     running = True
     while running:
@@ -148,22 +149,24 @@ def main():
         for car in cars:
             car.move()
 
-        for car in cars:
-            if frog.rect.colliderect(car.rect):
-                high_scores.append(score)
-                high_scores = sorted(high_scores, reverse=True)[:3]
-                io.put_LD(1)
-                time.sleep(5)
-                io.put_LD(0)
-                score = 0
-                frog.rect.y = SCREEN_HEIGHT - FROG_HEIGHT - 10
-                frog.rect.x = GAME_WIDTH // 2
-                frog.has_scored = False
-
         screen.fill(GRAY)
         pygame.draw.rect(screen, DARK_GREEN, (0, 0, GAME_WIDTH, SAFE_ZONE_HEIGHT))
         pygame.draw.rect(screen, DARK_GREEN, (0, SCREEN_HEIGHT - SAFE_ZONE_HEIGHT, GAME_WIDTH, SAFE_ZONE_HEIGHT))
         pygame.draw.rect(screen, LIGHT_GRAY, (GAME_WIDTH, 0, PANEL_WIDTH, SCREEN_HEIGHT))
+
+        title_text = font.render("Scoreboard", True, DARK_BLUE)
+        screen.blit(title_text, (GAME_WIDTH + 50, 20))
+
+        score_text = font.render(f"Score: {score}", True, BLUE)
+        screen.blit(score_text, (GAME_WIDTH + 50, 60))
+
+        for i, high_score in enumerate(high_scores):
+            high_score_text = font.render(f"Top {i+1}: {high_score}", True, BLACK)
+            screen.blit(high_score_text, (GAME_WIDTH + 50, 100 + i * 30))
+
+        pygame.draw.rect(screen, WHITE, (GAME_WIDTH + 50, SCREEN_HEIGHT - 80, 100, 30))
+        exit_text = button_font.render("Sair", True, BLACK)
+        screen.blit(exit_text, (GAME_WIDTH + 80, SCREEN_HEIGHT - 75))
 
         frog.draw()
         for car in cars:
