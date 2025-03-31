@@ -94,9 +94,10 @@ class IO:
         os.write(self.fd, data.to_bytes(4, 'little'))
 
     def reset_displays(self):
-        # Envia zeros para todos os dígitos de ambos os displays
-        self.put_DP(0, [0, 0, 0, 0])  # Display esquerdo (4 dígitos)
-        self.put_DP(1, [0, 0, 0, 0])  # Display direito (4 dígitos)
+       ioctl(self.fd, DIS_L)
+       os.write(self.fd, b'\x00\x00\x00\x00\x00\x00\x00\x00')
+       ioctl(self.fd, DIS_R)
+       os.write(self.fd, b'\x00\x00\x00\x00\x00\x00\x00\x00')
 
 class Frog:
     def __init__(self):
