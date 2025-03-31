@@ -139,6 +139,8 @@ def main():
     io = IO()
 
     io.reset_displays()
+    io.put_LD_G(0)
+    io.put_LD(0)
 
     running = True
     while running:
