@@ -170,6 +170,7 @@ def main():
                 io.put_LD(LED_ALL_RED)
                 time.sleep(2)
                 io.put_LD(0)
+                io.put_LD_G(0)
                 score = 0
                 frog = Frog()  # Reseta a posição do sapo corretamente
 
