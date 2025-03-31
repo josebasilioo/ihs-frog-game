@@ -128,8 +128,10 @@ def main():
     button_font = pygame.font.Font(None, 28)
     io = IO()
 
-    io.put_DP(0, "0000")
-    io.put_DP(1, "0000")
+    # Zerando todos os 8 displays
+    for i in range(8):
+        io.put_DP(0, "00")
+        io.put_DP(1, "00")
 
     running = True
     while running:
@@ -148,6 +150,18 @@ def main():
 
         for car in cars:
             car.move()
+
+        for car in cars:
+            if frog.rect.colliderect(car.rect):
+                high_scores.append(score)
+                high_scores = sorted(high_scores, reverse=True)[:3]
+                io.put_LD(1)
+                time.sleep(2)
+                io.put_LD(0)
+                score = 0
+                frog.rect.y = SCREEN_HEIGHT - FROG_HEIGHT - 10
+                frog.rect.x = GAME_WIDTH // 2
+                frog.has_scored = False
 
         screen.fill(GRAY)
         pygame.draw.rect(screen, DARK_GREEN, (0, 0, GAME_WIDTH, SAFE_ZONE_HEIGHT))
@@ -171,12 +185,6 @@ def main():
         frog.draw()
         for car in cars:
             car.draw()
-
-        if frog.rect.y < SAFE_ZONE_HEIGHT and not frog.has_scored:
-            score += 1
-            frog.has_scored = True
-        if frog.rect.y >= SCREEN_HEIGHT - FROG_HEIGHT:
-            frog.has_scored = False
 
         io.put_DP(0, str(score).zfill(2))
         io.put_DP(1, str(high_scores[0]).zfill(2))
