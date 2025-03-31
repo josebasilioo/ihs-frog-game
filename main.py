@@ -95,8 +95,8 @@ class IO:
  
     def reset_displays(self):
          for _ in range(8):
-             self.put_DP(0, "00")
-             self.put_DP(1, "00")
+             self.put_DP(0, "7979")
+             self.put_DP(1, "7979")
 
 class Frog:
     def __init__(self):
