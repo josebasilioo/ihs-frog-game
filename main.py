@@ -161,6 +161,14 @@ def main():
                 frog.rect.x = GAME_WIDTH // 2
                 frog.has_scored = False
 
+        # Verifica se o sapo chegou na zona segura superior
+        if frog.rect.y < SAFE_ZONE_HEIGHT and not frog.has_scored:
+            score += 1
+            frog.has_scored = True
+        # Reseta o has_scored quando o sapo volta para a base
+        if frog.rect.y >= SCREEN_HEIGHT - FROG_HEIGHT:
+            frog.has_scored = False
+
         screen.fill(GRAY)
         pygame.draw.rect(screen, DARK_GREEN, (0, 0, GAME_WIDTH, SAFE_ZONE_HEIGHT))
         pygame.draw.rect(screen, DARK_GREEN, (0, SCREEN_HEIGHT - SAFE_ZONE_HEIGHT, GAME_WIDTH, SAFE_ZONE_HEIGHT))
